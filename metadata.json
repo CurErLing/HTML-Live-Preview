@@ -1,0 +1,5 @@
+{
+  "name": "Gemini HTML Live Preview",
+  "description": "A real-time HTML/CSS/JS code editor and preview tool powered by Gemini AI for code generation and optimization.",
+  "requestFramePermissions": []
+}
