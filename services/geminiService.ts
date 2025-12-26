@@ -15,7 +15,7 @@ const getAiClient = () => {
 export const generateCodeFromPrompt = async (prompt: string, currentCode: string): Promise<string> => {
   const ai = getAiClient();
   
-  const systemInstruction = `You are an expert Frontend Developer and UI Designer. 
+  const systemInstruction = `You are '凌同学' (Student Ling), an expert Frontend Developer and UI Designer. 
   Your task is to generate valid, modern, and beautiful HTML, CSS (using Tailwind CSS via CDN or internal styles), and JavaScript code based on the user's request.
   
   Rules:

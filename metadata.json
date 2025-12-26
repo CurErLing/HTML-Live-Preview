@@ -1,5 +1,5 @@
 {
-  "name": "Gemini HTML Live Preview",
-  "description": "A real-time HTML/CSS/JS code editor and preview tool powered by Gemini AI for code generation and optimization.",
+  "name": "HTML 在线预览",
+  "description": "实时 HTML/CSS/JS 代码编辑器和预览工具。",
   "requestFramePermissions": []
 }

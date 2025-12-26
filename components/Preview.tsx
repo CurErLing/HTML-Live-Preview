@@ -28,10 +28,10 @@ const Preview: React.FC<PreviewProps> = ({ code, autoRefresh }) => {
   return (
     <div className="w-full h-full bg-white flex flex-col">
        <div className="flex-none px-4 py-2 bg-gray-100 border-b border-gray-200 text-gray-500 text-xs font-semibold tracking-wider uppercase flex justify-between items-center">
-        <span>Preview</span>
+        <span>预览</span>
         <span className="flex items-center gap-1">
           <span className={`w-2 h-2 rounded-full ${autoRefresh ? 'bg-green-500' : 'bg-gray-400'}`}></span>
-          {autoRefresh ? 'Live' : 'Manual'}
+          {autoRefresh ? '实时' : '手动'}
         </span>
       </div>
       <div className="flex-1 relative">

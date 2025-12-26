@@ -30,8 +30,8 @@ const Editor: React.FC<EditorProps> = ({ code, onChange }) => {
   return (
     <div className="w-full h-full bg-gray-900 flex flex-col">
       <div className="flex-none px-4 py-2 bg-gray-900 border-b border-gray-800 text-gray-400 text-xs font-semibold tracking-wider uppercase flex justify-between items-center">
-        <span>HTML Source</span>
-        <span className="text-gray-600">Editable</span>
+        <span>HTML 源码</span>
+        <span className="text-gray-600">可编辑</span>
       </div>
       <div className="flex-1 relative overflow-hidden">
         <textarea
@@ -42,7 +42,7 @@ const Editor: React.FC<EditorProps> = ({ code, onChange }) => {
           className="absolute inset-0 w-full h-full p-4 bg-gray-950 text-gray-100 font-mono text-sm resize-none focus:outline-none leading-relaxed border-none"
           placeholder="<html>
   <body>
-    <h1>Hello World</h1>
+    <h1>你好，世界</h1>
   </body>
 </html>"
         />
