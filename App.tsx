@@ -13,6 +13,7 @@ import {
   UploadIcon
 } from './components/Icon';
 
+// 初始默认的 HTML 模板代码
 const INITIAL_CODE = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -49,23 +50,29 @@ const INITIAL_CODE = `<!DOCTYPE html>
 </html>`;
 
 const App: React.FC = () => {
-  const [code, setCode] = useState<string>(INITIAL_CODE);
-  const [viewMode, setViewMode] = useState<ViewMode>(ViewMode.SPLIT);
-  const [autoRefresh, setAutoRefresh] = useState<boolean>(true);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  // 状态管理
+  const [code, setCode] = useState<string>(INITIAL_CODE); // 编辑器代码内容
+  const [viewMode, setViewMode] = useState<ViewMode>(ViewMode.SPLIT); // 视图模式（分屏、仅代码、仅预览）
+  const [autoRefresh, setAutoRefresh] = useState<boolean>(true); // 是否开启自动运行
+  const fileInputRef = useRef<HTMLInputElement>(null); // 文件上传 Input 的引用
 
+  // 处理文件下载功能
   const handleDownload = () => {
+    // 创建一个包含代码内容的 Blob 对象
     const blob = new Blob([code], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
+    // 创建临时的 a 标签触发下载
     const a = document.createElement('a');
     a.href = url;
     a.download = 'index.html';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+    // 释放 URL 对象
     URL.revokeObjectURL(url);
   };
 
+  // 处理本地文件上传读取
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -74,18 +81,20 @@ const App: React.FC = () => {
     reader.onload = (e) => {
       const content = e.target?.result;
       if (typeof content === 'string') {
-        setCode(content);
+        setCode(content); // 将文件内容更新到编辑器
       }
     };
     reader.readAsText(file);
-    // Reset value so we can load the same file again if needed
+    // 重置 input value，允许用户重复上传同一个文件
     event.target.value = '';
   };
 
   return (
     <div className="flex flex-col h-screen bg-gray-950 text-white">
-      {/* Header / Toolbar */}
+      {/* 顶部导航栏 / 工具栏 */}
       <header className="h-16 bg-gray-900 border-b border-gray-800 flex items-center justify-between px-4 lg:px-6 shadow-md z-10">
+        
+        {/* 左侧：Logo 和 标题 */}
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/20">
             <CodeIcon />
@@ -95,8 +104,10 @@ const App: React.FC = () => {
           </h1>
         </div>
 
+        {/* 右侧：操作按钮组 */}
         <div className="flex items-center gap-2 lg:gap-4">
-          {/* Main Controls */}
+          
+          {/* 视图切换按钮组 */}
           <div className="flex bg-gray-800 p-1 rounded-lg">
             <button
               onClick={() => setViewMode(ViewMode.CODE)}
@@ -123,6 +134,7 @@ const App: React.FC = () => {
 
           <div className="h-6 w-px bg-gray-800 mx-1"></div>
 
+          {/* 自动/手动运行切换按钮 */}
           <button
             onClick={() => setAutoRefresh(!autoRefresh)}
             className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors border border-transparent ${
@@ -135,9 +147,10 @@ const App: React.FC = () => {
             <span className="hidden md:inline">{autoRefresh ? '自动运行' : '手动运行'}</span>
           </button>
           
+          {/* 仅在手动模式下显示的运行按钮 */}
           {!autoRefresh && (
              <button
-             onClick={() => setCode(prev => prev + ' ')} // Hack to trigger update in preview component effect
+             onClick={() => setCode(prev => prev + ' ')} // Hack: 添加空格触发 Preview 组件内的 useEffect 更新
              className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-900/20 transition-all"
            >
              <PlayIcon />
@@ -147,6 +160,7 @@ const App: React.FC = () => {
 
           <div className="h-6 w-px bg-gray-800 mx-1 hidden sm:block"></div>
           
+          {/* 下载按钮 */}
           <div className="relative group">
              <button 
                 onClick={handleDownload} 
@@ -157,6 +171,7 @@ const App: React.FC = () => {
              </button>
           </div>
 
+          {/* 上传文件按钮 */}
           <div className="relative group">
             <input 
               type="file" 
@@ -174,6 +189,7 @@ const App: React.FC = () => {
              </button>
           </div>
 
+          {/* 清空编辑器按钮 */}
           <button 
             onClick={() => { if(confirm('确定要清空所有代码吗？')) setCode(''); }} 
             className="p-2 text-gray-400 hover:text-red-400 transition-colors"
@@ -184,10 +200,10 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      {/* Main Content */}
+      {/* 主内容区域 */}
       <main className="flex-1 overflow-hidden relative flex">
         
-        {/* Editor Pane */}
+        {/* 左侧：编辑器区域 */}
         <div 
             className={`
                 transition-all duration-300 ease-in-out h-full border-r border-gray-800
@@ -199,14 +215,13 @@ const App: React.FC = () => {
           <Editor code={code} onChange={setCode} />
         </div>
 
-        {/* Preview Pane */}
+        {/* 右侧：预览区域 */}
         <div 
             className={`
                 transition-all duration-300 ease-in-out h-full
                 ${viewMode === ViewMode.SPLIT ? 'w-1/2' : ''}
                 ${viewMode === ViewMode.PREVIEW ? 'w-full' : ''}
                 ${viewMode === ViewMode.CODE ? 'w-0 hidden' : ''}
-                // On mobile, if split, we stack, but for simplicity in this CSS grid we might toggle
                 ${viewMode === ViewMode.SPLIT ? 'block w-full md:w-1/2' : ''}
             `}
         >
@@ -214,7 +229,7 @@ const App: React.FC = () => {
         </div>
       </main>
 
-      {/* Mobile view logic adjustor (simple implementation) */}
+      {/* 移动端底部视图切换悬浮按钮 */}
       <div className="md:hidden absolute bottom-4 left-1/2 -translate-x-1/2 bg-gray-800 p-1 rounded-full shadow-xl border border-gray-700 flex gap-1 z-50">
          <button 
            onClick={() => setViewMode(ViewMode.CODE)}
